@@ -1,24 +1,29 @@
 load "iovtk";
 load "msh3";
 
-border a(t=0, 2*pi){x=3*cos(t); y=3*sin(t); label=1;}
-mesh Th= buildmesh(a(50));
+border a(t=0, 2*pi){x=3*cos(t); y=3*sin(t); }
+mesh Th= buildmesh(a(100));
+
+
 
 
 
 func real[int] findline(real px, real py) {
   
-  matrix cord(2,4);
-  cord(0, 0) = -3; cord(0, 1) = 0; cord(0, 2) = 2; cord(0, 3) = 0;
-  cord(1, 0) = 0; cord(1, 1) = 3; cord(1, 2) = 0; cord(1, 3) = -2;
-  
+  matrix cord(6,4);
+  cord(0, 0) = -3; cord(0, 1) = 0; cord(0, 2) = 3; cord(0, 3) = 0;
+  cord(1, 0) = 0; cord(1, 1) = 3; cord(1, 2) = 0; cord(1, 3) = -3;
+  cord(2, 0) = -2; cord(2, 1) = -2; cord(2, 2) = 2; cord(2, 3) = 2;
+  cord(3, 0) = 2; cord(3, 1) = -2; cord(3, 2) = -2; cord(3, 3) = 2;
+  cord(4, 0) = 1; cord(4, 1) = 2; cord(4, 2) = -1; cord(4, 3) = -2;
+  cord(5, 0) = 1; cord(5, 1) = -2; cord(5, 2) = -1; cord(5, 3) = 2;
 
   real[int] point1 = [px,py];
   real minDist = 1e+30;
   real dx3 = 0;
   real dy3 = 0;
   real[int] answer = [0,0,0];
-  for (int i = 0; i <= 1; i++){
+  for (int i = 0; i <0; i++){
     real dx2 = cord(i,2) - cord(i,0); 
     real dy2 = cord(i,3) - cord(i,1); 
     real[int] linestart = [point1[0] - cord(i,0), point1[1] - cord(i,1)];
@@ -40,60 +45,60 @@ func real[int] findline(real px, real py) {
 }
 
 
-func matrix distance(real px, real py) {
-  real[int] cd = findline(px,py);
- 
-  real Deff = 10000; 
+func real[int] distance(real px, real py) {
+  real[int] cd = findline(px, py);
+
+
+  real Deff = 800.0 ;
   
-  real distance2 =  (cd[2] < .3) ? 25: 0.1;
+  real distance2 =  (cd[2] < .3) ? 0: 0;
+
+
+  
 
   real ang = atan2(cd[1], cd[0]);
-  real a = jn(2,distance2)/j0(distance2); // bessel function of the first kind not the modified version 
-  real D11 = (0.5 * (1 - a) + a * pow(cos(ang), 2))*-Deff;
-  real D12 = (a * cos(ang) * sin(ang))*-Deff;
-  real D22 = (0.5 * (1 - a) + a * pow(sin(ang), 2))*-Deff;
-  matrix A(2, 2);
-  A(0,0) = D11;  // Setting the first element
-  A(0,1) = D12;  // Setting the second element
-  A(1,0) = D12;  // Setting the third element
-  A(1,1) = D22;  // Setting the fourth element
-  return A;
+  real a = jn(2,distance2)/j0(distance2); // Bessel function calculation
+
+  real D11 = (0.5 * (1 - a)) * Deff + a * pow(cos(ang), 2);
+  real D12 = (a * cos(ang) * sin(ang)) ;
+  real D22 = (0.5 * (1 - a)) * Deff + a * pow(sin(ang), 2);
   
+  real[int] A = [D11, D12, D22];
+  return A; // Returns only the individual components of the matrix
 }
 
 
 
 
 
-fespace Vh(Th, P2); // P2 finite element space
-
-
-
-
-
+fespace Vh(Th, P1); // P2 finite element space
 
 Vh T, v; // T is the temperature field, v is the test function
 
 
-
 // Define the problem
-solve Poisson(T, v, solver=LU)
-    = int2d(Th)(
-          distance(x, y)(0,0)* (dx(T)*dx(v)) + distance(x, y)(1,0)* (dx(T)*dy(v)) +distance(x, y)(0,1)* (dy(T)*dx(v)) + distance(x, y)(1,1)* (dy(T)*dy(v))
-          
+solve Laplace(T, v, solver=LU)
+    =  int2d(Th)(
+          + distance(x, y)[0] *dx(v) *dx(T)
+         + distance(x, y)[1] *dx(v) *dy(T)
+          +distance(x, y)[1] *dy(v) *dx(T)
+          + distance(x, y)[2] *dy(v) *dy(T)
+        
       )
-    + int2d(Th)(
-          1*v // Source term (right-hand side)
+    -int2d(Th)(
+          v // Source term (right-hand side)
       )
-    + on(1, 2, 3,4, T=0); // Boundary conditions (e.g., T = 0 on all boundaries)
+    + on(a, T=0); // Boundary conditions (e.g., T = 0 on all boundaries)
 
 // Plot the result
 real locx = 0;
 real locy = 0;
 real usol = T(locx, locy);
+
 cout << "The FDM said 31.720, Interpolated value at (" << locx << ", " << locy << ") is " << usol << endl;
 
-plot(T, wait = true, value = true, nbiso = 9);
+plot(T, wait = true, value = true);
 
-//savevtk("/Users/jacobmantooth/Desktop/output2.vtk", Th, T, dataname="Temperature");
+savevtk("/Users/jacobmantooth/Desktop/simplecircle.vtk", Th, T, dataname="Temperature");
+
 
