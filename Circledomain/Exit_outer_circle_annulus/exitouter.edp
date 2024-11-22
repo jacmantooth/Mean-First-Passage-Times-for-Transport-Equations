@@ -94,7 +94,7 @@ solve Laplace(T, v, solver=LU)
     -int2d(Th)(
           v // Source term (right-hand side)
       )
-    + on(b, T=0); // Boundary conditions (e.g., T = 0 on all boundaries)
+    + on(a, T=0); // Boundary conditions (e.g., T = 0 on all boundaries)
 
 
 real alpha = .0001;
