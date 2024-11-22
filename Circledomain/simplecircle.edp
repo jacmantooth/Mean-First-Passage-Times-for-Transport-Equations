@@ -95,10 +95,23 @@ real locx = 0;
 real locy = 0;
 real usol = T(locx, locy);
 
+real d = 20^2;
+
+Vh Ttrue;
+
+Ttrue = 1/(4*d) * (3^2 - (sqrt(x^2 + y^2))^2);
+
+real mse = int2d(Th)((Ttrue - T)^2) / int2d(Th)(1);
+
+cout << "Mean Squared Error (MSE): " << mse << endl;
+
+
 cout << "The FDM said 31.720, Interpolated value at (" << locx << ", " << locy << ") is " << usol << endl;
 
 plot(T, wait = true, value = true);
 
-savevtk("/Users/jacobmantooth/Desktop/simplecircle.vtk", Th, T, dataname="Temperature");
+//savevtk("/Users/jacobmantooth/Desktop/simplecircle.vtk", Th, T, dataname="Temperature");
+
+
 
 
