@@ -1,0 +1,149 @@
+load "iovtk";
+load "msh3";
+
+// Define borders
+border a(t=0, 2*pi) { x = cos(t); y = sin(t); label = 1; }
+border b(t=0, 2*pi) { x = 5*cos(t); y = 5*sin(t); label = 2; }
+
+// Create the mesh for the annular region by removing the inner circle
+mesh Th = buildmesh( b(100)+a(-50));
+
+// Define regions
+
+
+
+
+
+func real[int] findline(real px, real py) {
+  
+  matrix cord(6,4);
+  cord(0, 0) = -3; cord(0, 1) = 0; cord(0, 2) = 3; cord(0, 3) = 0;
+  cord(1, 0) = 0; cord(1, 1) = 3; cord(1, 2) = 0; cord(1, 3) = -3;
+  cord(2, 0) = -2; cord(2, 1) = -2; cord(2, 2) = 2; cord(2, 3) = 2;
+  cord(3, 0) = 2; cord(3, 1) = -2; cord(3, 2) = -2; cord(3, 3) = 2;
+  cord(4, 0) = 1; cord(4, 1) = 2; cord(4, 2) = -1; cord(4, 3) = -2;
+  cord(5, 0) = 1; cord(5, 1) = -2; cord(5, 2) = -1; cord(5, 3) = 2;
+
+  real[int] point1 = [px,py];
+  real minDist = 1e+30;
+  real dx3 = 0;
+  real dy3 = 0;
+  real[int] answer = [0,0,0];
+  for (int i = 0; i <0 ; i++){
+    real dx2 = cord(i,2) - cord(i,0); 
+    real dy2 = cord(i,3) - cord(i,1); 
+    real[int] linestart = [point1[0] - cord(i,0), point1[1] - cord(i,1)];
+    real[int] line = [dx2 , dy2];
+    real linesquared = line[0] * line[0] + line[1] * line[1];
+    real dotproduct = linestart[0] * line[0] + linestart[1] * line[1];
+    real projectedlength = dotproduct/linesquared;
+    projectedlength = max(0.0, min(1.0, projectedlength));
+    real[int] closestpoint = [cord(i,0) + projectedlength * line[0], cord(i,1) + projectedlength * line[1]];
+    real distance = sqrt((px - closestpoint[0])^2 + (py - closestpoint[1])^2);
+    if (distance < minDist){
+      minDist = distance;
+      dx3 = dx2;
+      dy3 = dy2;
+      answer = [dx3,dy3, minDist];
+    }
+  }
+  return answer;
+}
+
+
+func real[int] distance(real px, real py) {
+  real[int] cd = findline(px, py);
+
+
+  real Deff = 800.0 ;
+  
+  real distance2 =  (cd[2] < .2) ? 0: 0;
+
+
+  
+
+  real ang = atan2(cd[1], cd[0]);
+  real a = jn(2,distance2)/j0(distance2); // Bessel function calculation
+
+  real D11 = (0.5 * (1 - a)) * Deff + a * pow(cos(ang), 2);
+  real D12 = (a * cos(ang) * sin(ang)) ;
+  real D22 = (0.5 * (1 - a)) * Deff + a * pow(sin(ang), 2);
+  
+  real[int] A = [D11, D12, D22];
+  return A; // Returns only the individual components of the matrix
+}
+
+
+                 
+
+
+fespace Vh(Th, P1); // P2 finite element space
+
+Vh T, v; // T is the temperature field, v is the test function
+
+
+// Define the problem
+solve Laplace(T, v, solver=LU)
+    =  int2d(Th)(
+          + distance(x, y)[0] *dx(v) *dx(T)
+         + distance(x, y)[1] *dx(v) *dy(T)
+          +distance(x, y)[1] *dy(v) *dx(T)
+          + distance(x, y)[2] *dy(v) *dy(T)
+        
+      )
+    -int2d(Th)(
+          v // Source term (right-hand side)
+      )
+    + on(a,b, T=0); // Boundary conditions (e.g., T = 0 on all boundaries)
+
+
+real alpha = .0001;
+
+// Define a function that returns a real value
+func real findbeta(real bigalpha) {
+    return (2 * bigalpha) / (1 + bigalpha);
+}
+
+// Call the function and assign the result to a variable
+real beta = findbeta(alpha);
+
+
+real d = 20^2;
+real bigR = 5;
+real littler = 1;
+
+Vh Ttrue;
+
+Ttrue = -1 / (4 * d) *(sqrt(x^2 + y^2))^2 + 1 / (4 * d)*(bigR^beta*littler^2-bigR^2*littler^beta)/(bigR^beta - littler^beta) + 
+      (sqrt(x^2 + y^2))^beta/(4*d)*(bigR^2-littler^2)/(bigR^beta - littler^beta);
+
+
+ (5^2 - (sqrt(x^2 + y^2))^2)
+             + 1 / (2 * beta * d) * 1^(beta / alpha) * ((sqrt(x^2 + y^2))^beta- 5^beta);
+
+
+real mse = int2d(Th)((Ttrue - T)^2) / int2d(Th)(1);
+
+cout << "Mean Squared Error (MSE): " << mse << endl;
+// Compute L2 norm
+real L2norm = sqrt(int2d(Th)((Ttrue - T)^2) / int2d(Th)(1));
+
+cout << "L2 norm (Root Mean Square Error): " << L2norm << endl;
+
+// Compute L2 inf
+real Linfnorm = 0.0;
+
+// Loop over the degrees of freedom to find the maximum absolute error
+for (int i = 0; i < Ttrue.n; i++) {
+   real abserror = abs(Ttrue[][i] - T[][i]);
+   if (abserror > Linfnorm) {
+           Linfnorm = abserror;
+    }
+}
+
+cout << "L-infinity norm (Maximum Pointwise Error): " << Linfnorm << endl;
+
+
+plot(T, wait = true, value = true);
+
+savevtk("/Users/jacobmantooth/Desktop/exitboth.vtk", Th, T, dataname="Time");

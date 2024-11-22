@@ -1,0 +1,19 @@
+Verification of Section 6.1.4: Exit from the inner or outer circle of an annulus:
+
+This repository contains files used to verify the results presented in Section 6.1.4 of our paper. Specifically, this case explores motion constrained to an annular region, where all trajectories satisfy
+ρ<r<R 
+
+The random  in the case where a particle can exit the annulus from both inner and outer circles r=ρ or r=R_0
+​	
+Included Files
+
+This repository contains the following files:
+
+Python Script
+A Python implementation demonstrating the solution and verifying its correctness.
+Finite Element Method File
+A Finite Element Method (FEM) implementation that further validates the derived equation.
+Purpose
+
+Both implementations independently confirm the accuracy of our solution and demonstrate that the derived equation holds under the specified boundary conditions.
+
