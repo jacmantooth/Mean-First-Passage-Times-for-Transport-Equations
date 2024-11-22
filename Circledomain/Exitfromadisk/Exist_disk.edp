@@ -23,7 +23,7 @@ func real[int] findline(real px, real py) {
   real dx3 = 0;
   real dy3 = 0;
   real[int] answer = [0,0,0];
-  for (int i = 0; i <0; i++){
+  for (int i = 0; i <0 ; i++){
     real dx2 = cord(i,2) - cord(i,0); 
     real dy2 = cord(i,3) - cord(i,1); 
     real[int] linestart = [point1[0] - cord(i,0), point1[1] - cord(i,1)];
@@ -51,7 +51,7 @@ func real[int] distance(real px, real py) {
 
   real Deff = 800.0 ;
   
-  real distance2 =  (cd[2] < .3) ? 0: 0;
+  real distance2 =  (cd[2] < .2) ? 0: 0;
 
 
   
@@ -101,17 +101,31 @@ Vh Ttrue;
 
 Ttrue = 1/(4*d) * (3^2 - (sqrt(x^2 + y^2))^2);
 
+// Compute L1 norm
 real mse = int2d(Th)((Ttrue - T)^2) / int2d(Th)(1);
 
 cout << "Mean Squared Error (MSE): " << mse << endl;
+// Compute L2 norm
+real L2norm = sqrt(int2d(Th)((Ttrue - T)^2) / int2d(Th)(1));
 
+cout << "L2 norm (Root Mean Square Error): " << L2norm << endl;
+
+// Compute L2 inf
+real Linfnorm = 0.0;
+
+// Loop over the degrees of freedom to find the maximum absolute error
+//for (int i = 0; i < Ttrue.n; i++) {
+//    real abserror = abs(Ttrue[][i] - T[][i]);
+//    if (abserror > Linfnorm) {
+//        Linfnorm = abserror;
+//    }
+//}
+
+//cout << "L-infinity norm (Maximum Pointwise Error): " << Linfnorm << endl;
 
 cout << "The FDM said 31.720, Interpolated value at (" << locx << ", " << locy << ") is " << usol << endl;
 
 plot(T, wait = true, value = true);
 
-//savevtk("/Users/jacobmantooth/Desktop/simplecircle.vtk", Th, T, dataname="Temperature");
-
-
-
+savevtk("/Users/jacobmantooth/Desktop/simplecircle.vtk", Th, T, dataname="Temperature");
 

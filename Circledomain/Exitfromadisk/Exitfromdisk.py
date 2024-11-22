@@ -9,12 +9,6 @@ based on the problem defined in our paper. This code simulates the behavior of a
 where the objective is to reach the boundary. Given the infinite-horizon nature of this problem, our approach ensures a feasible solution.
 '''
 
-
-
-
-def distance(x1,y1,x2,y2):
-    return np.sqrt((x2-x1)**2+(y2-y1)**2)
-
 def findxy(var0,var1,var2,var3,r):
     """
     Input: Four vectors representing the positions of each particle before and after the velocity jump.
@@ -41,7 +35,7 @@ def findxy(var0,var1,var2,var3,r):
     #now that we have factored the two case we can find the "exact" solution using the simply trig math 
     var2var0 = (abs(var2 - var0) < epsilon)
     var1var3 = (abs(var3- var1) < epsilon)
-    mainindex = ~(var2var0 & var1var3)
+    mainindex = ~(var2var0 | var1var3)
     m = (var3[mainindex]-var1[mainindex])/(var2[mainindex]-var0[mainindex])#getting m 
     b = var3[mainindex] - m*var2[mainindex] # getting b        
     a1 = (1+m**2)# getting a for x 
@@ -64,7 +58,7 @@ def findxy(var0,var1,var2,var3,r):
     return x,y
 
 def k(x,y):# all k will be the same in this case 
-  return 1.78*np.ones(len(x))
+  return np.zeros(len(x))
 
 def q(x,y,phi): # finding our q 
     theta = np.arctan2(y,x)
