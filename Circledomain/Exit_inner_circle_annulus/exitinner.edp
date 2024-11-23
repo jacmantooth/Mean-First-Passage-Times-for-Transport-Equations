@@ -1,63 +1,108 @@
 load "iovtk";
 load "msh3";
 
+
+real bigradius = 5.0;
+real smallradius = 1.0;
+bool FindError = true;
+bool plotlines = false;
+bool differecet0t1 = false; 
+int weightterm = 0.0;
+int weightterm2 = 0.0;
+bool save = false;
+int numlines = 5;
+
+
+
+
 // Define borders
-border a(t=0, 2*pi) { x = cos(t); y = sin(t); label = 1; }
-border b(t=0, 2*pi) { x = 5*cos(t); y = 5*sin(t); label = 2; }
+border a(t=0, 2*pi) { x = smallradius*cos(t); y = smallradius* sin(t); label = 1; }
+border b(t=0, 2*pi) { x = bigradius*cos(t); y = bigradius*sin(t); label = 2; }
 
 // Create the mesh for the annular region by removing the inner circle
 mesh Th = buildmesh( b(100)+a(-50));
 
 // Define regions
 
+func real[int] connectpoints(real bigradius, real smallradius, int numlines) {
+    real[int] angles(numlines); // Array to store angles
+    real[int] srxcoords(numlines); // Small circle x-coordinates
+    real[int] srycoords(numlines); // Small circle y-coordinates
+    real[int] brxcoords(numlines); // Big circle x-coordinates
+    real[int] brycoords(numlines); // Big circle y-coordinates
 
-
-
-
-func real[int] findline(real px, real py) {
-  
-  matrix cord(6,4);
-  cord(0, 0) = -3; cord(0, 1) = 0; cord(0, 2) = 3; cord(0, 3) = 0;
-  cord(1, 0) = 0; cord(1, 1) = 3; cord(1, 2) = 0; cord(1, 3) = -3;
-  cord(2, 0) = -2; cord(2, 1) = -2; cord(2, 2) = 2; cord(2, 3) = 2;
-  cord(3, 0) = 2; cord(3, 1) = -2; cord(3, 2) = -2; cord(3, 3) = 2;
-  cord(4, 0) = 1; cord(4, 1) = 2; cord(4, 2) = -1; cord(4, 3) = -2;
-  cord(5, 0) = 1; cord(5, 1) = -2; cord(5, 2) = -1; cord(5, 3) = 2;
-
-  real[int] point1 = [px,py];
-  real minDist = 1e+30;
-  real dx3 = 0;
-  real dy3 = 0;
-  real[int] answer = [0,0,0];
-  for (int i = 0; i <0 ; i++){
-    real dx2 = cord(i,2) - cord(i,0); 
-    real dy2 = cord(i,3) - cord(i,1); 
-    real[int] linestart = [point1[0] - cord(i,0), point1[1] - cord(i,1)];
-    real[int] line = [dx2 , dy2];
-    real linesquared = line[0] * line[0] + line[1] * line[1];
-    real dotproduct = linestart[0] * line[0] + linestart[1] * line[1];
-    real projectedlength = dotproduct/linesquared;
-    projectedlength = max(0.0, min(1.0, projectedlength));
-    real[int] closestpoint = [cord(i,0) + projectedlength * line[0], cord(i,1) + projectedlength * line[1]];
-    real distance = sqrt((px - closestpoint[0])^2 + (py - closestpoint[1])^2);
-    if (distance < minDist){
-      minDist = distance;
-      dx3 = dx2;
-      dy3 = dy2;
-      answer = [dx3,dy3, minDist];
+    // Compute angles
+    for (int i = 0; i < numlines; i++) {
+        angles[i] = 2.0 * pi * i / numlines;
     }
-  }
-  return answer;
+
+    // Compute circle points
+    for (int i = 0; i < numlines; i++) {
+        srxcoords[i] = smallradius * cos(angles[i]); // x-coordinate (small circle)
+        srycoords[i] = smallradius * sin(angles[i]); // y-coordinate (small circle)
+        brxcoords[i] = bigradius * cos(angles[i]);  // x-coordinate (big circle)
+        brycoords[i] = bigradius * sin(angles[i]);  // y-coordinate (big circle)
+    }
+
+    // Combine all arrays into a single array
+    int totalSize = 4 * numlines; // Total size for all coordinates
+    real[int] combined(totalSize);
+
+    // Copy small circle x-coordinates
+    for (int i = 0; i < numlines; i++) {
+        combined[i] = srxcoords[i];
+    }
+    // Copy small circle y-coordinates
+    for (int i = 0; i < numlines; i++) {
+        combined[numlines + i] = srycoords[i];
+    }
+    // Copy big circle x-coordinates
+    for (int i = 0; i < numlines; i++) {
+        combined[2 * numlines + i] = brxcoords[i];
+    }
+    // Copy big circle y-coordinates
+    for (int i = 0; i < numlines; i++) {
+        combined[3 * numlines + i] = brycoords[i];
+    }
+
+    return combined; // Return the combined array
 }
 
+func real[int] findline(real px, real py, real[int] points, real numlines) {
+    real[int] point1 = [px,py];
+    real minDist = 1e+30;
+    real dx3 = 0;
+    real dy3 = 0;
+    real[int] answer = [0,0,0];
+    for (int i = 0; i < numlines; i++){
+      real dx2 = points[2 * numlines + i]-points[i] ; 
+      real dy2 = points[3 * numlines + i]-points[numlines + i]; 
+      real[int] linestart = [point1[0] - points[i], point1[1] - points[numlines + i]];
+      real[int] line = [dx2 , dy2];
+      real linesquared = line[0] * line[0] + line[1] * line[1];
+      real dotproduct = linestart[0] * line[0] + linestart[1] * line[1];
+      real projectedlength = dotproduct/linesquared;
+      projectedlength = max(0.0, min(1.0, projectedlength));
+      real[int] closestpoint = [points[i] + projectedlength * line[0], points[numlines + i] + projectedlength * line[1]];
+      real distance = sqrt((px - closestpoint[0])^2 + (py - closestpoint[1])^2);
+      if (distance < minDist){
+        minDist = distance;
+        dx3 = dx2;
+        dy3 = dy2;
+        answer = [dx3,dy3, minDist];
+      }
+    }
+    return answer;
+}
 
-func real[int] distance(real px, real py) {
-  real[int] cd = findline(px, py);
+func real[int] distance(real px, real py, real[int] points, real numlines, real weightterm) {
+
+  real[int] cd = findline(px, py, points, numlines);
 
 
   real Deff = 800.0 ;
   
-  real distance2 =  (cd[2] < .2) ? 0: 0;
+  real distance2 =  (cd[2] < .2) ? weightterm: 0;
 
 
   
@@ -73,69 +118,122 @@ func real[int] distance(real px, real py) {
   return A; // Returns only the individual components of the matrix
 }
 
+func real findbeta(real bigalpha) {
+    return (2 * bigalpha) / (1 + bigalpha);
+}
 
-                 
 
+real[int] points = connectpoints(bigradius, smallradius, numlines);
 
 fespace Vh(Th, P1); // P2 finite element space
 
-Vh T, v; // T is the temperature field, v is the test function
+Vh T,T1, v,difference;
 
-
-// Define the problem
 solve Laplace(T, v, solver=LU)
     =  int2d(Th)(
-          + distance(x, y)[0] *dx(v) *dx(T)
-         + distance(x, y)[1] *dx(v) *dy(T)
-          +distance(x, y)[1] *dy(v) *dx(T)
-          + distance(x, y)[2] *dy(v) *dy(T)
+          + distance(x, y,points,numlines,weightterm)[0] *dx(v) *dx(T)
+         + distance(x, y,points,numlines,weightterm)[1] *dx(v) *dy(T)
+          +distance(x, y,points,numlines,weightterm)[1] *dy(v) *dx(T)
+          + distance(x, y,points,numlines,weightterm)[2] *dy(v) *dy(T)
         
       )
     -int2d(Th)(
           v // Source term (right-hand side)
       )
-    + on(a, T=0); // Boundary conditions (e.g., T = 0 on all boundaries)
+    + on(a, T=0); 
+
+
+
 
 
 real alpha = .0001;
-
-// Define a function that returns a real value
-func real findbeta(real bigalpha) {
-    return (2 * bigalpha) / (1 + bigalpha);
-}
-
-// Call the function and assign the result to a variable
 real beta = findbeta(alpha);
-
-
 real d = 20^2;
 
-Vh Ttrue;
-
-Ttrue = 1 / (4 * d) * (1^2 - (sqrt(x^2 + y^2))^2)
-             + 1 / (2 * beta * d) * 5^(beta / alpha) * ((sqrt(x^2 + y^2))^beta- 1^2);
 
 
-real mse = int2d(Th)((Ttrue - T)^2) / int2d(Th)(1);
+if (FindError) {
+  Vh Ttrue;
+  Ttrue = 1 / (4 * d) * (smallradius^2 - (sqrt(x^2 + y^2))^2)
+             + 1 / (2 * beta * d) * bigradius^(beta / alpha) * ((sqrt(x^2 + y^2))^beta- smallradius^2);
+  
+  
+  real mse = int2d(Th)((Ttrue - T)^2) / int2d(Th)(1);
 
-cout << "Mean Squared Error (MSE): " << mse << endl;
-// Compute L2 norm
-real L2norm = sqrt(int2d(Th)((Ttrue - T)^2) / int2d(Th)(1));
+  cout << "Mean Squared Error (MSE): " << mse << endl;
+  // Compute L2 norm
+  real L2norm = sqrt(int2d(Th)((Ttrue - T)^2) / int2d(Th)(1));
 
-cout << "L2 norm (Root Mean Square Error): " << L2norm << endl;
+  cout << "L2 norm (Root Mean Square Error): " << L2norm << endl;
 
-// Compute L2 inf
-real Linfnorm = 0.0;
+  // Compute L2 inf
+  real Linfnorm = 0.0;
 
-// Loop over the degrees of freedom to find the maximum absolute error
-for (int i = 0; i < Ttrue.n; i++) {
-   real abserror = abs(Ttrue[][i] - T[][i]);
-   if (abserror > Linfnorm) {
-           Linfnorm = abserror;
-    }
+  // Loop over the degrees of freedom to find the maximum absolute error
+  for (int i = 0; i < Ttrue.n; i++) {
+    real abserror = abs(Ttrue[][i] - T[][i]);
+    if (abserror > Linfnorm) {
+            Linfnorm = abserror;
+      }
+  }
+
+  cout << "L-infinity norm (Maximum Pointwise Error): " << Linfnorm << endl;
 }
 
-cout << "L-infinity norm (Maximum Pointwise Error): " << Linfnorm << endl;
+if(plotlines){
+  real[int] allxcoords, allycoords;
 
+  // Initialize empty arrays with enough space for all coordinates
+  allxcoords.resize(3 * numlines); // 2 points per line + NaN separator
+  allycoords.resize(3 * numlines);
 
-plot(T, wait = true, value = true);
+  int index = 0; // Index to track the current position in the arrays
+
+  for (int i = 0; i < numlines; i++) {
+      real x0 = points[i];                 // Small circle x-coordinate
+      real x1 = points[2 * numlines + i];  // Big circle x-coordinate
+      real y0 = points[numlines + i];      // Small circle y-coordinate
+      real y1 = points[3 * numlines + i];  // Big circle y-coordinate
+
+      // Store the current line segment coordinates in the arrays
+      allxcoords[index] = x0;
+      allycoords[index] = y0;
+      index++;
+
+      allxcoords[index] = x1;
+      allycoords[index] = y1;
+      index++;
+
+      // center at zero
+      allxcoords[index] = 0;
+      allycoords[index] = 0;
+      index++;
+  }
+
+  // Resize arrays to remove unused spaces (if any)
+  allxcoords.resize(index);
+  allycoords.resize(index);
+
+  // Plot all line segments on a single graph
+  plot(T, [allxcoords, allycoords], value = true,cmm = "All Connecting Lines", wait = true);
+}
+else {
+    plot(T, wait = true, value = true,cmm = "Solution");
+}
+
+if(differecet0t1){
+  solve Laplace2(T1, v, solver=LU)
+      = int2d(Th)(
+            + distance(x, y, points, numlines, weightterm2)[0] * dx(v) * dx(T1)
+            + distance(x, y, points, numlines, weightterm2)[1] * dx(v) * dy(T1)
+            + distance(x, y, points, numlines, weightterm2)[1] * dy(v) * dx(T1)
+            + distance(x, y, points, numlines, weightterm2)[2] * dy(v) * dy(T1)
+        )
+      - int2d(Th)(v) // Source term
+      + on(a , T1=0);  // Dirichlet boundary condition
+  difference = T1 - T;
+  plot(difference,value = true, cmm = "Difference: T - Tweighted");
+}
+if(save){
+savevtk("/Users/jacobmantooth/Desktop/exitboth.vtk", Th, T, dataname="Time");
+}
