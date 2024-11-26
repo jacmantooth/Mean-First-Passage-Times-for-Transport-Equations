@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 mu = 2000000  # Mobility
 v = 40000  # Speed
 outrad = 1  # Outer radius
-D = v**2 / (2 * mu)  # Diffusion coefficient
+D = 800  # Diffusion coefficient
 
 # Define the true solution
 def true_solution(x, y):
@@ -15,13 +15,13 @@ def true_solution(x, y):
 
 # Define the coefficients
 def D11(x, y):
-    return D
+    return 0.5 *D
 
 def D12(x, y):
     return 0.0
 
 def D22(x, y):
-    return D
+    return 0.5 *D
 
 # PINN model definition
 class PINN(tf.keras.Model):
