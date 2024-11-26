@@ -7,12 +7,18 @@ Contents
 The repository includes the following approaches for solving the problem:
 
 Finite Element Method (FEM): Implementation of the numerical solution using FEM to approximate the solution.
+
 Numerical Simulation: Direct simulation-based approach to solving the problem.
+
 Analytical Solution: Derivation and computation of the exact analytical solution for comparison.
 Results
 
 All methods were verified to be within 1% of each other, validating the consistency and accuracy of the solutions.
+
 This analysis focuses on a specific section of the paper, as noted in the accompanying documentation.
+
+**new**
+This section will now include using PINN(Physics Informed Neural Networks) on the MFPT for just escaping a circle 
 
 Notes
 
