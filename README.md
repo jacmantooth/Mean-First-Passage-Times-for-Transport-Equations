@@ -5,8 +5,11 @@ This repository contains the code used in the research presented in the paper \t
 
 The code in this repository includes the implementation for the example involving a circular domain, as described in the paper. Specifically, it addresses the solution for particles traveling along microtubules. It also includes the implementation for the example involving a square domain in addresses the solution for wolves moving in the wild
 
-Using the Finite Difference Method (FDM), we verify our numerical simulations with high accuracy. Below is the Mean First Passage Time (MFPT) solution for the circular domain example:
+Using the Finite Element Method (FEM), we verify our numerical simulations with high accuracy. Below is the Mean First Passage Time (MFPT) solution for the circular domain example:
 ![Alt Text](Circledomain/Exitfromadisk/Figs/MFPTSOLcircle.tiff)
+
+Using the Finite Difference Method (FDM), we verify our numerical simulations with high accuracy. Below is the Mean First Passage Time (MFPT) solution for the square domain example:
+![Alt Text](Wolftrackex/Figs/domiandirectionmmfptSol.png)
 
 Furthermore, we demonstrate that Physics-Informed Neural Networks (PINNs) successfully recapture the solution for the "Exit from the Disk" section of the paper:
 
