@@ -11,9 +11,10 @@ This repository contains the following files:
 
 Python Script
 A Python implementation demonstrating the solution and verifying its correctness.
-Finite Element Method File
 A Finite Element Method (FEM) implementation that further validates the derived equation.
 Purpose
 
 Both implementations independently confirm the accuracy of our solution and demonstrate that the derived equation holds under the specified boundary conditions.
 
+**Update**
+Adding PINN solution
