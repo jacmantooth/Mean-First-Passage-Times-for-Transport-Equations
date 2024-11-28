@@ -9,6 +9,9 @@ Using the Finite Difference Method (FDM), we verify our numerical simulations wi
 ![Alt Text](Circledomain/Exitfromadisk/Figs/MFPTSOLcircle.tiff)
 
 Furthermore, we demonstrate that Physics-Informed Neural Networks (PINNs) successfully recapture the solution for the "Exit from the Disk" section of the paper:
-![Alt Text](Circledomain/Exitfromadisk/Figs/PINNcircle.png)
-The full domain predictions using PINNs are shown below:
+
 ![Alt Text](Circledomain/Exitfromadisk/Figs/PINNprediction.png)
+
+The full domain predictions using PINNs are shown below:
+
+![Alt Text](Circledomain/Exitfromadisk/Figs/PINNcircle.png)
