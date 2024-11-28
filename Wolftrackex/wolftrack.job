@@ -1,0 +1,16 @@
+#!/bin/bash
+#$ -M jmantoot
+#$ -m abe
+#$ -q long
+#$ -pe smp 25
+#$ -N Wolftrackdata2
+
+module load python
+
+# Loop through omega and mu values from 100 to 1000
+for omega in {100..1000..100}; do
+  for mu in {100..1000..100}; do
+    echo "Running wolftrackscript.py with omega=$omega and mu=$mu"
+    python3 wolftrackscript.py --omega $omega --mu $mu
+  done
+done
