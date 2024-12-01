@@ -18,9 +18,9 @@ Demonstrated effectiveness in recapturing the solution for the "Exit from the Di
 ![Alt Text](Circledomain/Exitfromadisk/Figs/PINNprediction.png)
 
 Full domain predictions using PINNs:
-<p align="center">
+
   ![Alt Text](Circledomain/Exitfromadisk/Figs/PINNcircle.png)
-</p>
+
 
 
 # Usage
