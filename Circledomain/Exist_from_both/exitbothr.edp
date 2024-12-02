@@ -100,7 +100,7 @@ func real[int] distance(real px, real py, real[int] points, real numlines, real 
   real[int] cd = findline(px, py, points, numlines);
 
 
-  real Deff = 800.0 ;
+  real Deff = 400.0 ;
   
   real distance2 =  (cd[2] < .2) ? weightterm: 0;
 
