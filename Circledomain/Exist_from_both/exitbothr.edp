@@ -148,7 +148,7 @@ solve Laplace(T, v, solver=LU)
 
 real alpha = .0001;
 real beta = findbeta(alpha);
-real d = 20^2;
+real d = 400;
 
 
 
