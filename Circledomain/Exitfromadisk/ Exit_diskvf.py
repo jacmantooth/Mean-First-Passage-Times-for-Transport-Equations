@@ -12,6 +12,10 @@ various points within the disk and ensure their behavior aligns
 with the theoretical predictions.
 """
 
+'''
+Note to self D is 400 in this case, where mu = 2000000 and v = 40000, and D is found by the following D = v**2/((2*mu))
+'''
+
 
 def get_angdist():
     """
@@ -129,8 +133,8 @@ for xlocal in xglobal:
 
     escapetime = np.zeros(particule) #the time at which the paticule reaches the goal 
     times = np.zeros(particule)  # the current time 
-    mu= 2000000  # k equal 1 at 
-    v = 40000 #speed on MT
+    mu= 2000000  
+    v = 40000
     radius = np.zeros(particule) # the radius of our goal 
     angle = np.zeros(particule) # our angle which we are going 
     r = np.zeros(particule) # our current radius aka where we are at 

@@ -49,7 +49,7 @@ func real[int] distance(real px, real py) {
   real[int] cd = findline(px, py);
 
 
-  real Deff = 800.0 ;
+  real Deff = 400.0 ;
   
   real distance2 =  (cd[2] < .2) ? 0: 0;
 
@@ -95,7 +95,7 @@ real locx = 0;
 real locy = 0;
 real usol = T(locx, locy);
 
-real d = 20^2;
+real d = 400;
 
 Vh Ttrue;
 

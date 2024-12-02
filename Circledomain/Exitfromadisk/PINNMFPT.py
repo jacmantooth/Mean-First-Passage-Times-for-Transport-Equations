@@ -2,11 +2,12 @@ import tensorflow as tf
 import numpy as np 
 import matplotlib.pyplot as plt 
 
+
 # Define constants
 mu = 2000000  # Mobility
 v = 40000  # Speed
 outrad = 1  # Outer radius
-D = 800  # Diffusion coefficient
+D =  v**2/((2*mu))  # Diffusion coefficient
 
 # Define the true solution
 def true_solution(x, y):

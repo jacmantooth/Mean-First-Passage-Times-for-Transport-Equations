@@ -1,8 +1,30 @@
 # Mean-First-Passage-Times-for-Transport-Equations
-Code for the Mean First Passage Time Paper 
+This repository contains the code and examples used in the research presented in the paper Mean First Passage Times for Transport Equations. You can find the full paper here: https://arxiv.org/abs/2404.00400
 
-For more information on the paper please click here https://arxiv.org/abs/2404.00400
+## Overview 
+The repository includes implementations for the examples discussed in the paper, including:
 
-This github repo contains the code used for the Mean First Passage paper from the circle domian example to the wolf track examples 
+## Numerical Methods
+
+1. Circular Domain Example. Simulates particle movement along microtubules in a circular domain:
+   ![Alt Text](Circledomain/Exitfromadisk/Figs/MFPTSOLcircle.tiff)
+2. Square Domain Example: Models the movement of wolves in the wild, incorporating turning kernel biases and preferred movement directions.
+   ![Alt Text](Wolftrackex/Figs/domiandirectionmmfptSol.png)
+
+## Physics-Informed Neural Networks (PINNs)
+
+Demonstrated effectiveness in recapturing the solution for the "Exit from the Disk" example:
+
+![Alt Text](Circledomain/Exitfromadisk/Figs/PINNprediction.png)
+
+Full domain predictions using PINNs:
+
+  ![Alt Text](Circledomain/Exitfromadisk/Figs/PINNcircle.png)
 
 
+
+# Usage
+
+This repository provides a comprehensive set of tools and scripts for reproducing the numerical simulations and examples detailed in the paper. Each section is accompanied by its corresponding implementation to ensure clarity and reproducibility.
+
+Feel free to explore and modify the code to extend its applications or adapt it to other transport equation scenarios.
