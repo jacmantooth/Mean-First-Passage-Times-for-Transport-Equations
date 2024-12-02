@@ -8,7 +8,9 @@ The goal of this code is to fully vectorize the process, optimizing computationa
 based on the problem defined in our paper. This code simulates the behavior of a particle within a cell using the velocity jump process, 
 where the objective is to reach the boundary. Given the infinite-horizon nature of this problem, our approach ensures a feasible solution.
 '''
-
+"""
+Note to self D is 400 in this case, where mu = 2000000 and v = 40000, and D is found by the following D = v**2/((2*mu))
+"""
 def findxy(var0,var1,var2,var3,r):
     """
     Input: Four vectors representing the positions of each particle before and after the velocity jump.
@@ -83,8 +85,8 @@ def get_angle(x,y): # for each new position we get the angle that it should go
 particule = 1000000 # how many particule we want to find the solution for 
 escapetime = np.zeros(particule) #the time at which the paticule reaches the goal 
 times = np.zeros(particule)  # the current time 
-mu= 1000 #mu 
-v = np.sqrt(mu) #nu 
+mu= 2000000 #mu 
+v = 40000 #nu 
 xnew = np.zeros(particule) # our current x position 
 ynew = np.zeros(particule) # our current y position
 xnew2= np.zeros(particule)# our new x position 
