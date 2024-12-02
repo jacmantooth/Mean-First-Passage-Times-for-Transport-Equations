@@ -11,8 +11,9 @@ def getbeta(alpha):
     return(2*alpha/(1+alpha))
 # Define the true solution
 def true_solution(x, y):
-    
     radius = np.sqrt(x**2 + y**2)
+    bigradius = 5 
+    smradius = 1 
     return -1/(4*D)*radius**2 + 1/(4*D)*(bigradius**beta*smradius**2-bigradius**2 *smradius**beta)/(bigradius**beta - smradius**beta)+(radius**beta)/(4*D)*(bigradius**2-smradius**2)/(bigradius**beta - smradius**beta)
 
 # PINN model definition
@@ -62,7 +63,7 @@ def pde_residual(model, x, y):
     d2T_dy2 = tape2.gradient(dT_dy, y)
 
     # PDE residual
-    residual = .5*D * (d2T_dx2 + d2T_dy2) + 1
+    residual = D * (d2T_dx2 + d2T_dy2) + 1
    
     return residual 
 
@@ -70,18 +71,20 @@ def pde_residual(model, x, y):
 def loss_fn(model, x_train, y_train, x_boundary, y_boundary, T_boundary,train_data):
     # PDE residual loss
     residual = pde_residual(model, x_train, y_train)
-    pde_loss = tf.reduce_mean(tf.square(residual-train_data))
+    pde_loss = tf.reduce_mean(tf.math.log(1 + tf.square(residual )))
+
 
     # Boundary condition loss
     T_pred_boundary = model(tf.stack([x_boundary, y_boundary], axis=1))
     boundary_loss = tf.reduce_mean(tf.square(T_pred_boundary - T_boundary))
 
     scale_factor = tf.reduce_mean(tf.abs(residual)) / (tf.reduce_mean(tf.abs(T_boundary)) + 1e-8)
-    total_loss = pde_loss
+    total_loss = pde_loss + boundary_loss*scale_factor
     return total_loss, pde_loss, boundary_loss
 
 # Training function
 def train_pinn(model, optimizer, epochs, x_train, y_train, x_boundary, y_boundary, T_boundary,train_data):
+    loss_history = {"total_loss": []}
     for epoch in range(epochs):
         with tf.GradientTape() as tape:
             total_loss, pde_loss, boundary_loss = loss_fn(
@@ -89,13 +92,17 @@ def train_pinn(model, optimizer, epochs, x_train, y_train, x_boundary, y_boundar
             )
         gradients = tape.gradient(total_loss, model.trainable_variables)
         optimizer.apply_gradients(zip(gradients, model.trainable_variables))
+        loss_history["total_loss"].append(total_loss.numpy())
+        
 
         if epoch % 100 == 0:
             print(f"Epoch {epoch}, PDE Loss: {pde_loss.numpy()}, Boundary Loss: {boundary_loss.numpy()}, Total Loss: {total_loss.numpy()}")
+    return loss_history   
 
 def sample_circle_domain(n_points):
     inner_radius=1
     outer_radius=5
+    SEED = 10
     mid_radius = (inner_radius+outer_radius)/2
     # Sample radius in the annular region
     r = np.random.normal(loc=mid_radius, scale=(outer_radius - inner_radius) / 4, size=n_points)
@@ -160,25 +167,39 @@ alpha = .001
 D = 400  # Diffusion coefficient
 beta = getbeta(alpha)
 
-x_train, y_train = sample_circle_domain(50)  # Points inside the circle
+x_train, y_train = sample_circle_domain(1000)  # Points inside the circle
 
 train_data = training_data(x_train ,y_train)
 
-x_boundary, y_boundary = sample_circle_boundary(5000)  # Points on the boundary
+x_boundary, y_boundary = sample_circle_boundary(100)  # Points on the boundary
 T_boundary = tf.zeros_like(x_boundary)  # Boundary condition: T = 0
 
 # Initialize and train the model
 model = PINN()
-optimizer = tf.keras.optimizers.Adam(learning_rate=0.001)
+optimizer = tf.keras.optimizers.Adam(
+    learning_rate=0.0033, #so far .0033 gave the best tried [.0033,.001,.004,.0035]
+    beta_1=0.9,#default is .9
+    beta_2=0.999,#default is .999
+    epsilon=1e-7#default is 1e-7
+)
 
-train_pinn(
-    model, optimizer, epochs=3000, 
+loss_history = train_pinn(
+    model, optimizer, epochs=4000, 
     x_train=x_train, y_train=y_train, 
     x_boundary=x_boundary, y_boundary=y_boundary, 
     T_boundary=T_boundary,
     train_data= train_data
 )
+plt.figure(figsize=(10, 6))
+plt.plot(loss_history["total_loss"], label="Total Loss")
 
+
+plt.xlabel("Epochs")
+plt.ylabel("Loss")
+plt.title("Training Losses Over Epochs")
+plt.legend()
+plt.grid()
+plt.show()
 
 # Predict and plot results
 x_plot = np.linspace(1.01, 4.99, 100)
