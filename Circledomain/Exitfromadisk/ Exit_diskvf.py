@@ -129,8 +129,8 @@ for xlocal in xglobal:
 
     escapetime = np.zeros(particule) #the time at which the paticule reaches the goal 
     times = np.zeros(particule)  # the current time 
-    mu= 2000000  # k equal 1 at 
-    v = 40000 #speed on MT
+    mu= 2500  
+    v = 2000
     radius = np.zeros(particule) # the radius of our goal 
     angle = np.zeros(particule) # our angle which we are going 
     r = np.zeros(particule) # our current radius aka where we are at 
