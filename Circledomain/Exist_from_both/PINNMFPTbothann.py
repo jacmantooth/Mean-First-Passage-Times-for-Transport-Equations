@@ -2,10 +2,10 @@ import tensorflow as tf
 import numpy as np 
 import matplotlib.pyplot as plt 
 from matplotlib.patches import Circle
-
+import os
 
 #TDDL Fix the diffusion term
-#note to me D = 400 where the full eq is 2 *D = omage^2 / mu , mu =2500.0, omaga = 2000.0
+#note to me D = 800 where the full eq is 2 *D = omage^2 / mu , mu =2500.0, omaga = 2000.0
 
 def getbeta(alpha):
     return(2*alpha/(1+alpha))
@@ -217,18 +217,20 @@ T_full[mask & mask2] = T_pred_circle.flatten()
 L2_error = np.sqrt(np.mean((T_full[mask & mask2] - T_true_circle) ** 2))
 diff = np.abs(T_full[mask & mask2] - T_true_circle)
 print("L2 Error:", L2_error)
-
+path = "/Users/jacobmantooth/Desktop/mtstuff/figs/PINNBOTHDC"
 if (L2_error< .001):
     plt.figure(figsize=(10, 6))
     plt.scatter(x_circle, y_circle, c=diff, cmap='viridis')
     plt.colorbar(label='Absolute Error')
     plt.title('Pointwise Absolute Error')
+    file_name = f"Pointwise_Absolute_Error_{L2_error:.4f}.png" 
+    plt.savefig(os.path.join(path, file_name))
     plt.show()
-    plt.savefig(f"/Users/jacobmantooth/Desktop/mtstuff/figs/PINNBOTHDC/Pointwise_Absolute_Error_{L2_error}")
+    
 
 
     # Plot the contour of predicted temperature over the circle
-    fig, ax = plt.subplots(figsize=(8, 8))  # Set the figure size here
+    fig, ax = plt.subplots(figsize=(10, 6))  # Set the figure size here
 
     # Contour plot
     contour = ax.contourf(x_mesh, y_mesh, T_full, cmap="viridis")
@@ -249,8 +251,10 @@ if (L2_error< .001):
     ax.set_title("Contour Plot of Predicted T(x, y) Over the Circle")
     ax.set_xlabel("x")
     ax.set_ylabel("y")
+    
+    file_name = f"Predicted_T_{L2_error:.4f}.png" 
+    plt.savefig(os.path.join(path, file_name))
     plt.show()
-    plt.savefig(f"/Users/jacobmantooth/Desktop/mtstuff/figs/PINNBOTHDC/Predicted_T_{L2_error}")
 
 
     plt.figure(figsize=(10, 6))
@@ -259,10 +263,10 @@ if (L2_error< .001):
     plt.ylabel("Loss")
     plt.title("Training Losses Over Epochs")
     plt.legend()
-    plt.grid()
+    file_name = f"Total_Loss_{L2_error:.4f}.png" 
+    plt.savefig(os.path.join(path, file_name))
     plt.show()
-    plt.savefig(f"/Users/jacobmantooth/Desktop/mtstuff/figs/PINNBOTHDC/Total_Loss_{L2_error}")
-
+    
     # Predict and plot results
     x_plot = np.linspace(1.01, 4.99, 100)
     y_plot = np.zeros(np.size(x_plot))
@@ -277,8 +281,11 @@ if (L2_error< .001):
     plt.ylabel("T(x, y=0)")
     plt.legend()
     plt.title("Comparison of PINN Prediction and Exact Solution")
+    file_name = f"Prediction_Exact_LeftLineSolution_{L2_error:.4f}.png" 
+    plt.savefig(os.path.join(path, file_name))
     plt.show()
-    plt.savefig(f"/Users/jacobmantooth/Desktop/mtstuff/figs/PINNBOTHDC/Prediction_Exact_LeftLineSolution{L2_error}")
+    
+
 
     x_plot = np.linspace(-4.99,-1.01, 100)
     y_plot = np.zeros(np.size(x_plot))
@@ -293,8 +300,11 @@ if (L2_error< .001):
     plt.ylabel("T(x, y=0)")
     plt.legend()
     plt.title("Comparison of PINN Prediction and Exact Solution")
+    file_name = f"Prediction_Exact_RightLineSolution_{L2_error:.4f}.png" 
+    plt.savefig(os.path.join(path, file_name))
     plt.show()
-    plt.savefig(f"/Users/jacobmantooth/Desktop/mtstuff/figs/PINNBOTHDC/Prediction_Exact_RightLineSolution{L2_error}")
+    
+   
 
 
     optimizer_config = {
@@ -305,7 +315,7 @@ if (L2_error< .001):
     }
 
 
-    with open(f"/Users/jacobmantooth/Desktop/mtstuff/figs/PINNBOTHDC/Optimizer_Config{L2_error}", 'a') as file2write:
+    with open(f"{path}/Optimizer_Config{L2_error}", 'a') as file2write:
         file2write.write("Optimizer configuration:\n")
         for key, value in optimizer_config.items():
             file2write.write(f"{key}: {value}\n")
