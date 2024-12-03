@@ -5,7 +5,7 @@ from matplotlib.patches import Circle
 
 
 #TDDL Fix the diffusion term
-#note to me D = 800 where the full eq is 2 *D = omage^2 / mu , mu =2500.0, omaga = 2000.0
+#note to me D = 400 where the full eq is 2 *D = omage^2 / mu , mu =2500.0, omaga = 2000.0
 
 def getbeta(alpha):
     return(2*alpha/(1+alpha))
@@ -177,60 +177,19 @@ T_boundary = tf.zeros_like(x_boundary)  # Boundary condition: T = 0
 # Initialize and train the model
 model = PINN()
 optimizer = tf.keras.optimizers.Adam(
-    learning_rate=0.0033, #so far .0035 gave the best tried [.0033]
+    learning_rate=0.0033, #so far .0033 gave the best results, I have tried [.032,.033,.0034,.035]
     beta_1=0.9,#default is .9
     beta_2=0.999,#default is .999
     epsilon=1e-7#default is 1e-7
 )
 
 loss_history = train_pinn(
-    model, optimizer, epochs=4000, 
+    model, optimizer, epochs=5000, 
     x_train=x_train, y_train=y_train, 
     x_boundary=x_boundary, y_boundary=y_boundary, 
     T_boundary=T_boundary,
     train_data= train_data
 )
-plt.figure(figsize=(10, 6))
-plt.plot(loss_history["total_loss"], label="Total Loss")
-
-
-plt.xlabel("Epochs")
-plt.ylabel("Loss")
-plt.title("Training Losses Over Epochs")
-plt.legend()
-plt.grid()
-plt.show()
-
-# Predict and plot results
-x_plot = np.linspace(1.01, 4.99, 100)
-y_plot = np.zeros(np.size(x_plot))
-T_pred = model(tf.convert_to_tensor(np.stack([x_plot, y_plot], axis=1), dtype=tf.float32)).numpy()
-T_exact = true_solution(x_plot, y_plot)
-
-
-plt.figure(figsize=(10, 6))
-plt.plot(x_plot, T_exact, label="Exact Solution")
-plt.plot(x_plot, T_pred.flatten(), label="PINN Prediction", linestyle="dashed")
-plt.xlabel("x")
-plt.ylabel("T(x, y=0)")
-plt.legend()
-plt.title("Comparison of PINN Prediction and Exact Solution")
-plt.show()
-
-x_plot = np.linspace(-4.99,-1.01, 100)
-y_plot = np.zeros(np.size(x_plot))
-T_pred = model(tf.convert_to_tensor(np.stack([x_plot, y_plot], axis=1), dtype=tf.float32)).numpy()
-T_exact = true_solution(x_plot, y_plot)
-
-
-plt.figure(figsize=(10, 6))
-plt.plot(x_plot, T_exact, label="Exact Solution")
-plt.plot(x_plot, T_pred.flatten(), label="PINN Prediction", linestyle="dashed")
-plt.xlabel("x")
-plt.ylabel("T(x, y=0)")
-plt.legend()
-plt.title("Comparison of PINN Prediction and Exact Solution")
-plt.show()
 
 
 # Generate a grid of points inside the circle
@@ -259,34 +218,94 @@ L2_error = np.sqrt(np.mean((T_full[mask & mask2] - T_true_circle) ** 2))
 diff = np.abs(T_full[mask & mask2] - T_true_circle)
 print("L2 Error:", L2_error)
 
-plt.figure(figsize=(10, 6))
-plt.scatter(x_circle, y_circle, c=diff, cmap='viridis')
-plt.colorbar(label='Absolute Error')
-plt.title('Pointwise Absolute Error')
-plt.show()
+if (L2_error< .001):
+    plt.figure(figsize=(10, 6))
+    plt.scatter(x_circle, y_circle, c=diff, cmap='viridis')
+    plt.colorbar(label='Absolute Error')
+    plt.title('Pointwise Absolute Error')
+    plt.show()
+    plt.savefig(f"/Users/jacobmantooth/Desktop/mtstuff/figs/PINNBOTHDC/Pointwise_Absolute_Error_{L2_error}")
 
 
-# Plot the contour of predicted temperature over the circle
-fig, ax = plt.subplots(figsize=(8, 8))  # Set the figure size here
+    # Plot the contour of predicted temperature over the circle
+    fig, ax = plt.subplots(figsize=(8, 8))  # Set the figure size here
 
-# Contour plot
-contour = ax.contourf(x_mesh, y_mesh, T_full, cmap="viridis")
-plt.colorbar(contour, ax=ax, label="Predicted T(x, y)")
+    # Contour plot
+    contour = ax.contourf(x_mesh, y_mesh, T_full, cmap="viridis")
+    plt.colorbar(contour, ax=ax, label="Predicted T(x, y)")
+    
+    # Add circles
+    circle1 = Circle((0, 0), radius=1, fill=False, edgecolor='red', linewidth=2)  # Circle with radius 1
+    circle2 = Circle((0, 0), radius=5, fill=False, edgecolor='red', linewidth=2)   # Circle with radius 5
+    ax.add_patch(circle1)
+    ax.add_patch(circle2)
 
-# Add circles
-circle1 = Circle((0, 0), radius=1, fill=False, edgecolor='red', linewidth=2)  # Circle with radius 1
-circle2 = Circle((0, 0), radius=5, fill=False, edgecolor='red', linewidth=2)   # Circle with radius 5
-ax.add_patch(circle1)
-ax.add_patch(circle2)
+    # Ensure aspect ratio is equal and set limits
+    ax.set_aspect('equal', adjustable='datalim')
+    ax.set_xlim(-6, 6)
+    ax.set_ylim(-6, 6)
 
-# Ensure aspect ratio is equal and set limits
-ax.set_aspect('equal', adjustable='datalim')
-ax.set_xlim(-6, 6)
-ax.set_ylim(-6, 6)
+    # Titles and labels
+    ax.set_title("Contour Plot of Predicted T(x, y) Over the Circle")
+    ax.set_xlabel("x")
+    ax.set_ylabel("y")
+    plt.show()
+    plt.savefig(f"/Users/jacobmantooth/Desktop/mtstuff/figs/PINNBOTHDC/Predicted_T_{L2_error}")
 
-# Titles and labels
-ax.set_title("Contour Plot of Predicted T(x, y) Over the Circle")
-ax.set_xlabel("x")
-ax.set_ylabel("y")
 
-plt.show()
+    plt.figure(figsize=(10, 6))
+    plt.plot(loss_history["total_loss"], label="Total Loss")
+    plt.xlabel("Epochs")
+    plt.ylabel("Loss")
+    plt.title("Training Losses Over Epochs")
+    plt.legend()
+    plt.grid()
+    plt.show()
+    plt.savefig(f"/Users/jacobmantooth/Desktop/mtstuff/figs/PINNBOTHDC/Total_Loss_{L2_error}")
+
+    # Predict and plot results
+    x_plot = np.linspace(1.01, 4.99, 100)
+    y_plot = np.zeros(np.size(x_plot))
+    T_pred = model(tf.convert_to_tensor(np.stack([x_plot, y_plot], axis=1), dtype=tf.float32)).numpy()
+    T_exact = true_solution(x_plot, y_plot)
+
+
+    plt.figure(figsize=(10, 6))
+    plt.plot(x_plot, T_exact, label="Exact Solution")
+    plt.plot(x_plot, T_pred.flatten(), label="PINN Prediction", linestyle="dashed")
+    plt.xlabel("x")
+    plt.ylabel("T(x, y=0)")
+    plt.legend()
+    plt.title("Comparison of PINN Prediction and Exact Solution")
+    plt.show()
+    plt.savefig(f"/Users/jacobmantooth/Desktop/mtstuff/figs/PINNBOTHDC/Prediction_Exact_LeftLineSolution{L2_error}")
+
+    x_plot = np.linspace(-4.99,-1.01, 100)
+    y_plot = np.zeros(np.size(x_plot))
+    T_pred = model(tf.convert_to_tensor(np.stack([x_plot, y_plot], axis=1), dtype=tf.float32)).numpy()
+    T_exact = true_solution(x_plot, y_plot)
+
+
+    plt.figure(figsize=(10, 6))
+    plt.plot(x_plot, T_exact, label="Exact Solution")
+    plt.plot(x_plot, T_pred.flatten(), label="PINN Prediction", linestyle="dashed")
+    plt.xlabel("x")
+    plt.ylabel("T(x, y=0)")
+    plt.legend()
+    plt.title("Comparison of PINN Prediction and Exact Solution")
+    plt.show()
+    plt.savefig(f"/Users/jacobmantooth/Desktop/mtstuff/figs/PINNBOTHDC/Prediction_Exact_RightLineSolution{L2_error}")
+
+
+    optimizer_config = {
+    "learning_rate": optimizer.learning_rate.numpy(),  # Convert to a value for saving
+    "beta_1": optimizer.beta_1,
+    "beta_2": optimizer.beta_2,
+    "epsilon": optimizer.epsilon
+    }
+
+
+    with open(f"/Users/jacobmantooth/Desktop/mtstuff/figs/PINNBOTHDC/Optimizer_Config{L2_error}", 'a') as file2write:
+        file2write.write("Optimizer configuration:\n")
+        for key, value in optimizer_config.items():
+            file2write.write(f"{key}: {value}\n")
