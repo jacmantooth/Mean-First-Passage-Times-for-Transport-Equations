@@ -177,7 +177,7 @@ T_boundary = tf.zeros_like(x_boundary)  # Boundary condition: T = 0
 # Initialize and train the model
 model = PINN()
 optimizer = tf.keras.optimizers.Adam(
-    learning_rate=0.0033, #so far .0033 gave the best tried [.0033,.001,.004,.0035]
+    learning_rate=0.0033, #so far .0035 gave the best tried [.0033]
     beta_1=0.9,#default is .9
     beta_2=0.999,#default is .999
     epsilon=1e-7#default is 1e-7
