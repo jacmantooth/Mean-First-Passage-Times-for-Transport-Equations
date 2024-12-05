@@ -10,7 +10,7 @@ This repository provides the numerical implementations and visualizations for th
    <div style="text-align: center;">
     <img src="Circledomain/Figs/g4500120-800px-wm.jpg" 
          alt="Circular Domain Example" 
-         width="200" 
+         width="300" 
          style="display: inline-block; margin-right: 10px;" />
     <img src="Circledomain/Exist_from_both/Figs/MFPTfig.png" 
          alt="Circular Domain Example" 
