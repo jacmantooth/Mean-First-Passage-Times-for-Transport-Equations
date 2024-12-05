@@ -18,7 +18,7 @@ The repository includes implementations for the examples discussed in the paper,
          style="display: inline-block; margin-right: 10px;" />
     <img src="Wolftrackex/Figs/domiandirectionmmfptSol.png" 
          alt="Circular Domain Example" 
-         width="500" 
+         width="400" 
          style="display: inline-block;" />
 </div>
 
