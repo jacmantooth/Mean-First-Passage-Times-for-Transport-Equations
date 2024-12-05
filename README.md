@@ -17,7 +17,7 @@ The repository includes implementations for the examples discussed in the paper,
          width="500" 
          style="display: inline-block;" />
    </div>
-2. Square Domain Example: Models the movement of wolves in the wild, incorporating turning kernel biases and preferred movement directions.
+2. Square Domain Example: Models the movement of wolves in the wild
 
    
    <div style="text-align: center;">
@@ -33,13 +33,18 @@ The repository includes implementations for the examples discussed in the paper,
 
 ## Physics-Informed Neural Networks (PINNs)
 
-Demonstrated effectiveness in recapturing the solution for the "Exit from the Disk" example:
+Lastly This git hub repo includes the code for our Physics-Informed Neural Network 
 
-![Alt Text](Circledomain/Exitfromadisk/Figs/PINNprediction.png)
-
-Full domain predictions using PINNs:
-
-  ![Alt Text](Circledomain/Exitfromadisk/Figs/PINNcircle.png)
+<div style="text-align: center;">
+    <img src="Circledomain/Exist_from_both/Figs/Predicted_T_0.0000.png" 
+         alt="Circular Domain Example" 
+         width="300" 
+         style="display: inline-block; margin-right: 10px;" />
+    <img src="Circledomain/Exitfromadisk/Figs/PINNcircle.png" 
+         alt="Circular Domain Example" 
+         width="500" 
+         style="display: inline-block;" />
+   </div>
 
 
 
