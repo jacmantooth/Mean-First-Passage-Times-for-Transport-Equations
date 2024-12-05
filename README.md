@@ -35,6 +35,18 @@ This repository provides the numerical implementations and visualizations for th
 
 This repository also includes the implementation of Physics-Informed Neural Networks (PINNs) for solving transport equations. The PINN model demonstrates high accuracy in predicting MFPT solutions. 
 
+Where our base solution for our problem that we will be comparing our PINN to is 
+<div style="text-align: center;">
+    <img src="Circledomain/Exist_from_both/Figs/FEMMFPT0.png" 
+         alt="Circular Domain Example" 
+         width="500" 
+         style="display: inline-block; margin-right: 10px;" />
+    <img src="Circledomain/Exitfromadisk/Figs/MFPTSOLcircle.png" 
+         alt="Circular Domain Example" 
+         width="325" 
+         style="display: inline-block;" />
+   </div>
+
 <div style="text-align: center;">
     <img src="Circledomain/Exist_from_both/Figs/Predicted_T_0.0000.png" 
          alt="Circular Domain Example" 
