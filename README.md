@@ -64,11 +64,11 @@ We compared the FEM and PINN solutions to the analytical solution by plotting th
 <div style="text-align: center;">
     <img src="Circledomain/Exist_from_both/Figs/Prediction_Exact_RightLineSolution_0.0000.png" 
          alt="Circular Domain Example" 
-         width="500" 
+         width="400" 
          style="display: inline-block; margin-right: 10px;" />
     <img src="Circledomain/Exitfromadisk/Figs/PINNprediction.png" 
          alt="Circular Domain Example" 
-         width="500" 
+         width="400" 
          style="display: inline-block;" />
    </div>
 
