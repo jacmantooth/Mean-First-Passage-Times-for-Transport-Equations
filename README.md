@@ -43,7 +43,7 @@ Where our base solution for our problem that we will be comparing our PINN to is
          style="display: inline-block; margin-right: 10px;" />
     <img src="Circledomain/Exitfromadisk/Figs/MFPTSOLcircle.png" 
          alt="Circular Domain Example" 
-         width="325" 
+         width="500" 
          style="display: inline-block;" />
    </div>
 
