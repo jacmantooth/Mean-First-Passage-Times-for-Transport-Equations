@@ -39,11 +39,11 @@ Using the Finite Element Method (FEM), we solved the MFPT partial differential e
 <div style="text-align: center;">
     <img src="Circledomain/Exist_from_both/Figs/FEMMFPT0.png" 
          alt="Circular Domain Example" 
-         width="500" 
+         width="400" 
          style="display: inline-block; margin-right: 10px;" />
     <img src="Circledomain/Exitfromadisk/Figs/MFPTSOLcircle.png" 
          alt="Circular Domain Example" 
-         width="500" 
+         width="400" 
          style="display: inline-block;" />
    </div>
    
