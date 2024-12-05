@@ -38,7 +38,7 @@ Lastly This git hub repo includes the code for our Physics-Informed Neural Netwo
 <div style="text-align: center;">
     <img src="Circledomain/Exist_from_both/Figs/Predicted_T_0.0000.png" 
          alt="Circular Domain Example" 
-         width="300" 
+         width="500" 
          style="display: inline-block; margin-right: 10px;" />
     <img src="Circledomain/Exitfromadisk/Figs/PINNcircle.png" 
          alt="Circular Domain Example" 
