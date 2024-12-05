@@ -42,7 +42,7 @@ Lastly This git hub repo includes the code for our Physics-Informed Neural Netwo
          style="display: inline-block; margin-right: 10px;" />
     <img src="Circledomain/Exitfromadisk/Figs/PINNcircle.png" 
          alt="Circular Domain Example" 
-         width="500" 
+         width="300" 
          style="display: inline-block;" />
    </div>
 
