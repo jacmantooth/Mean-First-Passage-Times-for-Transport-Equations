@@ -46,6 +46,17 @@ Lastly This git hub repo includes the code for our Physics-Informed Neural Netwo
          style="display: inline-block;" />
    </div>
 
+plotting both solution over x and comparing to the anayltical solution we get 
+<div style="text-align: center;">
+    <img src="Circledomain/Exist_from_both/Figs/Prediction_Exact_RightLineSolution_0.0000.png" 
+         alt="Circular Domain Example" 
+         width="500" 
+         style="display: inline-block; margin-right: 10px;" />
+    <img src="Circledomain/Exitfromadisk/Figs/PINNprediction.png" 
+         alt="Circular Domain Example" 
+         width="325" 
+         style="display: inline-block;" />
+   </div>
 
 
 # Usage
