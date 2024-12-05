@@ -33,7 +33,18 @@ This repository provides the numerical implementations and visualizations for th
 
 ## Physics-Informed Neural Networks (PINNs)
 
-This repository includes the implementation of Physics-Informed Neural Networks (PINNs) for solving transport equations. The PINN model achieves high accuracy in predicting Mean First Passage Time (MFPT) solutions, providing a data-driven alternative to traditional numerical methods.
+We aim to find the Physics-Informed Neural Network (PINN) solution because it offers several advantages over traditional numerical methods like the Finite Element Method (FEM) in certain scenarios:
+
+Data-Driven Approach: PINNs integrate observed or simulated data directly into the solution process, allowing for better handling of complex systems where analytical solutions or precise parameterization are challenging.
+
+Flexibility: PINNs do not require domain discretization (e.g., creating a mesh), making them well-suited for problems with irregular geometries, high-dimensional spaces, or evolving boundaries.
+
+Unified Framework: By incorporating both the governing PDEs and boundary/initial conditions as soft constraints in the loss function, PINNs can solve problems seamlessly without requiring separate formulations for different boundary conditions or regions.
+
+Scalability: PINNs leverage the computational power of modern deep learning frameworks, allowing for efficient parallelization and scalability to larger problems or more complex domains.
+Regularization and Generalization: PINNs naturally regularize solutions through their loss function, which enforces physics constraints. This reduces the risk of overfitting and ensures solutions remain physically meaningful even in the presence of noisy or incomplete data.
+
+In our case, using PINNs for MFPT solutions enables a flexible and efficient method for predicting outcomes in transport equations, offering potential for faster computations, especially in high-dimensional or complex systems.
 
 Using the Finite Element Method (FEM), we solved the MFPT partial differential equation (PDE). Below are visualizations of the FEM solution in a circular domain:
 <div style="text-align: center;">
