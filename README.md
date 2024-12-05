@@ -12,7 +12,7 @@ The repository includes implementations for the examples discussed in the paper,
 
    
    <div style="text-align: center;">
-  <img src="Circledomain/Exitfromadisk/Figs/MFPTSOLcircle.png" alt="Circular Domain Example" width="500" />
+  <img src="Wolftrackex/Figs/domiandirectionmmfptSol.png" alt="Circular Domain Example" width="500" />
    </div>
 
 ## Physics-Informed Neural Networks (PINNs)
