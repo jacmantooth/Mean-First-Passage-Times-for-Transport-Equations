@@ -7,7 +7,16 @@ The repository includes implementations for the examples discussed in the paper,
 ## Numerical Methods
 
 1. Circular Domain Example. Simulates particle movement along microtubules in a circular domain:
-   ![Alt Text](Circledomain/Exitfromadisk/Figs/MFPTSOLcircle.tiff)
+   <div style="text-align: center;">
+    <img src="Circledomain/Figs/g4500120-800px-wm.jpg" 
+         alt="Circular Domain Example" 
+         width="500" 
+         style="display: inline-block; margin-right: 10px;" />
+    <img src="Circledomain/Exist_from_both/Figs/MFPTfig.png" 
+         alt="Circular Domain Example" 
+         width="350" 
+         style="display: inline-block;" />
+   </div>
 2. Square Domain Example: Models the movement of wolves in the wild, incorporating turning kernel biases and preferred movement directions.
 
    
@@ -20,7 +29,7 @@ The repository includes implementations for the examples discussed in the paper,
          alt="Circular Domain Example" 
          width="350" 
          style="display: inline-block;" />
-</div>
+   </div>
 
 ## Physics-Informed Neural Networks (PINNs)
 
