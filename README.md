@@ -2,11 +2,11 @@
 This repository contains the code and examples used in the research presented in the paper Mean First Passage Times for Transport Equations. You can find the full paper here: https://arxiv.org/abs/2404.00400
 
 ## Overview 
-The repository includes implementations for the examples discussed in the paper, including:
+This repository provides the numerical implementations and visualizations for the examples discussed in the paper, showcasing applications of Mean First Passage Time (MFPT) theory to various transport equation scenarios. Key examples include:
 
 ## Numerical Methods
 
-1. Circular Domain Example. Simulates particle movement along microtubules in a circular domain:
+1. Circular Domain Example.  Simulates particle movement along microtubules within a circular domain.
    <div style="text-align: center;">
     <img src="Circledomain/Figs/g4500120-800px-wm.jpg" 
          alt="Circular Domain Example" 
@@ -17,7 +17,7 @@ The repository includes implementations for the examples discussed in the paper,
          width="500" 
          style="display: inline-block;" />
    </div>
-2. Square Domain Example: Models the movement of wolves in the wild
+2. Square Domain Example:Models the movement of wolves navigating through a domain, accounting for directional preferences such as seismic lines.
 
    
    <div style="text-align: center;">
@@ -33,7 +33,7 @@ The repository includes implementations for the examples discussed in the paper,
 
 ## Physics-Informed Neural Networks (PINNs)
 
-Lastly This git hub repo includes the code for our Physics-Informed Neural Network 
+This repository also includes the implementation of Physics-Informed Neural Networks (PINNs) for solving transport equations. The PINN model demonstrates high accuracy in predicting MFPT solutions. 
 
 <div style="text-align: center;">
     <img src="Circledomain/Exist_from_both/Figs/Predicted_T_0.0000.png" 
