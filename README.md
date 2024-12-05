@@ -54,7 +54,7 @@ plotting both solution over x and comparing to the anayltical solution we get
          style="display: inline-block; margin-right: 10px;" />
     <img src="Circledomain/Exitfromadisk/Figs/PINNprediction.png" 
          alt="Circular Domain Example" 
-         width="325" 
+         width="500" 
          style="display: inline-block;" />
    </div>
 
