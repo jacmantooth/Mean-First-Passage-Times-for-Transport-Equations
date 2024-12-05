@@ -12,8 +12,8 @@ The repository includes implementations for the examples discussed in the paper,
 
    
    <div style="text-align: center;">
-   <img src="Wolftrackex/Figs/1000_F_286464561_Kd0xtLPy094435OhOxWnlgNUJeFBF1HP.jpg" alt="Circular Domain Example" width="400" />
-  <img src="Wolftrackex/Figs/domiandirectionmmfptSol.png" alt="Circular Domain Example" width="400" />
+   <img src="Wolftrackex/Figs/1000_F_286464561_Kd0xtLPy094435OhOxWnlgNUJeFBF1HP.jpg" alt="Circular Domain Example" width="400" style="display: inline-block; margin-right: 10px;" />
+  <img src="Wolftrackex/Figs/domiandirectionmmfptSol.png" alt="Circular Domain Example" width="400" style="display: inline-block;" />
    </div>
 
 ## Physics-Informed Neural Networks (PINNs)
