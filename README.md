@@ -33,9 +33,9 @@ This repository provides the numerical implementations and visualizations for th
 
 ## Physics-Informed Neural Networks (PINNs)
 
-This repository also includes the implementation of Physics-Informed Neural Networks (PINNs) for solving transport equations. The PINN model demonstrates high accuracy in predicting MFPT solutions. 
+This repository includes the implementation of Physics-Informed Neural Networks (PINNs) for solving transport equations. The PINN model achieves high accuracy in predicting Mean First Passage Time (MFPT) solutions, providing a data-driven alternative to traditional numerical methods.
 
-Where our solution for the MFPT PDE is:
+Using the Finite Element Method (FEM), we solved the MFPT partial differential equation (PDE). Below are visualizations of the FEM solution in a circular domain:
 <div style="text-align: center;">
     <img src="Circledomain/Exist_from_both/Figs/FEMMFPT0.png" 
          alt="Circular Domain Example" 
@@ -47,7 +47,7 @@ Where our solution for the MFPT PDE is:
          style="display: inline-block;" />
    </div>
    
-PINN solution gave us the solution as 
+The PINN model produced the following solutions for the same circular domain, demonstrating its ability to closely replicate the FEM results:
 
 <div style="text-align: center;">
     <img src="Circledomain/Exist_from_both/Figs/Predicted_T_0.0000.png" 
@@ -60,7 +60,7 @@ PINN solution gave us the solution as
          style="display: inline-block;" />
    </div>
 
-plotting both solution over x and comparing to the anayltical solution we get 
+We compared the FEM and PINN solutions to the analytical solution by plotting their results along a specific cross-section of the domain. The comparison shows excellent agreement between the methods:
 <div style="text-align: center;">
     <img src="Circledomain/Exist_from_both/Figs/Prediction_Exact_RightLineSolution_0.0000.png" 
          alt="Circular Domain Example" 
