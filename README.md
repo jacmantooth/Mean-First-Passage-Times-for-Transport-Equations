@@ -10,11 +10,11 @@ This repository provides the numerical implementations and visualizations for th
    <div style="text-align: center;">
     <img src="Circledomain/Figs/g4500120-800px-wm.jpg" 
          alt="Circular Domain Example" 
-         width="300" 
+         width="200" 
          style="display: inline-block; margin-right: 10px;" />
     <img src="Circledomain/Exist_from_both/Figs/MFPTfig.png" 
          alt="Circular Domain Example" 
-         width="500" 
+         width="100" 
          style="display: inline-block;" />
    </div>
 2. Square Domain Example:Models the movement of wolves navigating through a domain, accounting for directional preferences such as seismic lines.
