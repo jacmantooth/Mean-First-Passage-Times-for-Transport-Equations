@@ -9,8 +9,11 @@ The repository includes implementations for the examples discussed in the paper,
 1. Circular Domain Example. Simulates particle movement along microtubules in a circular domain:
    ![Alt Text](Circledomain/Exitfromadisk/Figs/MFPTSOLcircle.tiff)
 2. Square Domain Example: Models the movement of wolves in the wild, incorporating turning kernel biases and preferred movement directions.
-   <img src="Wolftrackex/Figs/domiandirectionmmfptSol.png" alt="Circular Domain Example" width="500" />
 
+   
+   <div style="text-align: center;">
+  <img src="Circledomain/Exitfromadisk/Figs/MFPTSOLcircle.png" alt="Circular Domain Example" width="500" />
+   </div>
 
 ## Physics-Informed Neural Networks (PINNs)
 
